@@ -9,13 +9,8 @@ import { Route, Router } from '@angular/router';
 export class AppComponent {
   title = 'my-app';
 
-  // constructor(private router:Router){}
-
   ngOnInit() {
 
   }
 
-  // navbyurl(id: number) {
-  //   this.router.navigateByUrl('/login');
-  // }
 }
