@@ -1,8 +1,12 @@
-.homeContainer {
-  /* width: 1030%;
-  height: 1030%;
-  background: gray; */
+section{
+  display:grid;
+  grid-template-columns:  repeat(auto-fill, minmax(1200px, 1fr));
+  gap:1em;
+  
+  background-color:#eaeaea;
 }
-h1{
-  font-size: 100px;
+
+.info{
+  padding:1em;
+
 }

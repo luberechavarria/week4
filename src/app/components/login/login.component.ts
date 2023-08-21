@@ -1,44 +1,55 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Router} from '@angular/router';
+import { Component,OnInit,inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
+import {User} from "../../user";
+import {Router} from "@angular/router";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule,FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-
-  users: any[]; // Define the static array of users here
-
-  email:string | null='';
-  password:string | null='';
-  userNotFound:boolean=false;
-
-  constructor(private route:ActivatedRoute, private router: Router) {
-    // Initialize the users array with sample data
-    this.users = [
-      { id: 1, name: 'John Doe', password: 30, email: 'john@example.com' },
-      { id: 2, name: 'Jane Smith', password: 25, email: 'jane@example.com' },
-      { id: 3, name: 'Luber', password: 123, email: 'luberechavarria@gmail.com' },
-    ];
-  }
-
-
+export class LoginComponent implements OnInit{
+  errormsg = "";
+  newuser:User = new User();
+  email:string = "";
+  pwd:string = "";
+  loggedin:boolean = false;
+  
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  
   ngOnInit() {
     
   }
+  
+  signin(event:any){
+    console.log("at signin");
+    event.preventDefault();
+    this.authService.login(this.email,this.pwd).subscribe({
+      next:
+        (data)=>{
+          console.log(data)
+          if (data.valid == true){
+            this.newuser = new User(data.username,data.email,data.valid)
+            this.authService.setCurrentuser(this.newuser);
+            this.router.navigate(['/home']);
+          }else{
+           
+            this.errormsg = "There is a problem with the credentials";
+          }
+      
+      error:
+        this.errormsg = "There is a problem with the credentials";
+      
+    }
+      
+   
+  })
 
+}
 
-  itemClick(){
-    this.users.forEach(user => {
-      if(user.email == this.email && user.password == this.password){
-        this.router.navigateByUrl('/account');
-      }else{
-        this.userNotFound = true;
-        // this.email= '';
-        // this.password= '';
-      }
-    })
-  }
 }
